@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyTemplate.Data;
+using MyTemplate.DbMigrator.Orleans;
+using Orleans;
 using Serilog;
 using Volo.Abp;
 using Volo.Abp.Data;
@@ -24,11 +26,12 @@ public class DbMigratorHostedService : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         using (var application = await AbpApplicationFactory.CreateAsync<MyTemplateDbMigratorModule>(options =>
-        {
-           options.Services.ReplaceConfiguration(_configuration);
-           options.UseAutofac();
-           options.Services.AddLogging(c => c.AddSerilog());
-           options.AddDataMigrationEnvironment();
+        { 
+            options.Services.AddSingleton<IClusterClient, ClusterClientMock>();
+            options.Services.ReplaceConfiguration(_configuration);
+            options.UseAutofac();
+            options.Services.AddLogging(c => c.AddSerilog());
+            options.AddDataMigrationEnvironment();
         }))
         {
             await application.InitializeAsync();

@@ -57,6 +57,10 @@ ipch/
 *.vsp
 *.vspx
 
+# JetBrains Rider
+.idea/
+*.sln.iml
+
 # Guidance Automation Toolkit
 *.gpState
 
