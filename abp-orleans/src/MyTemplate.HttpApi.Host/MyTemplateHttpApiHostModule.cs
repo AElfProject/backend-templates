@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyTemplate.MongoDB;
-using MyTemplate.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
 using Microsoft.OpenApi.Models;
@@ -19,7 +18,6 @@ using OpenIddict.Validation.AspNetCore;
 using Volo.Abp;
 using Volo.Abp.Account;
 using Volo.Abp.Account.Web;
-using Volo.Abp.AspNetCore.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
@@ -36,7 +34,6 @@ namespace MyTemplate;
 [DependsOn(
     typeof(MyTemplateHttpApiModule),
     typeof(AbpAutofacModule),
-    typeof(AbpAspNetCoreMultiTenancyModule),
     typeof(MyTemplateApplicationModule),
     typeof(MyTemplateMongoDbModule),
     typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
@@ -200,10 +197,6 @@ public class MyTemplateHttpApiHostModule : AbpModule, IDomainGrainsModule, IAppl
         app.UseAuthentication();
         app.UseAbpOpenIddictValidation();
 
-        if (MultiTenancyConsts.IsEnabled)
-        {
-            app.UseMultiTenancy();
-        }
         app.UseUnitOfWork();
         app.UseDynamicClaims();
         app.UseAuthorization();
