@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "argfoo-zhifeng-aelf",
+  "classifications": [ "ABP", "Core", "Template", "Orleans", "AElf" ],
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "identity": "AElf.Backend.Template.AbpOrleans",
+  "name": "AElf Backend Template ABP Orleans",
+  "shortName": "aelf-abp-orleans",
+  "sourceName": "MyTemplate",
+  "symbols": {
+    "NamespacePath": {
+      "type": "parameter",
+      "replaces": "MyTemplate"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [ "src/.vs/**", ".template_config/**", "src/.idea/**" ]
+        }
+      ]
+    }
+  ]
+}
