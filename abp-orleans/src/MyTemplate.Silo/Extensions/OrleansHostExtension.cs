@@ -47,6 +47,7 @@ namespace MyTemplate.Silo.Extensions
                         options.ClusterId = configSection.GetValue<string>("ClusterId");
                         options.ServiceId = configSection.GetValue<string>("ServiceId");
                     })
+                    .AddActivityPropagation()
                     .UseDashboard(options =>
                     {
                         options.Username = configSection.GetValue<string>("DashboardUserName");

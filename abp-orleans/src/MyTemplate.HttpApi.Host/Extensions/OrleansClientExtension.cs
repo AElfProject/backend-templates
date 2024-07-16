@@ -19,6 +19,7 @@ public static class OrleansClientExtension
             var config = context.Configuration;
 
             clientBuilder
+                .AddActivityPropagation()
                 .UseMongoDBClient(config["Orleans:MongoDBClient"])
                 .UseMongoDBClustering(options =>
                 {

@@ -1,3 +1,4 @@
+using AElf.OpenTelemetry;
 using MyTemplate.Domain.Grains;
 using Microsoft.Extensions.DependencyInjection;
 using MyTemplate.Application.Grains;
@@ -9,7 +10,8 @@ namespace MyTemplate.Silo;
 
 [DependsOn(
     typeof(AbpAspNetCoreSerilogModule),
-    typeof(AbpAutofacModule)
+    typeof(AbpAutofacModule),
+    typeof(OpenTelemetryModule)
 )]
 public class SiloModule : AbpModule, IDomainGrainsModule, IApplicationGrainsModule
 {
