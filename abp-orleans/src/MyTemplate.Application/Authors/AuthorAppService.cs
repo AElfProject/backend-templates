@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using AElf.OpenTelemetry;
+using AElf.OpenTelemetry.ExecutionTime;
+using Microsoft.Extensions.Logging;
 using MyTemplate.Application.Grains.Authors;
 using Orleans;
 using Volo.Abp;
@@ -10,20 +14,27 @@ using Volo.Abp.Domain.Repositories;
 
 namespace MyTemplate.Authors;
 
+[AggregateExecutionTime]
 public class AuthorAppService : ApplicationService, IAuthorAppService
 {
     private readonly IAuthorRepository _authorRepository;
     private readonly AuthorManager _authorManager;
     private readonly IClusterClient _clusterClient;
+    private readonly ActivitySource _activitySource;
+    private readonly ILogger<AuthorAppService> _logger;
 
     public AuthorAppService(
         IAuthorRepository authorRepository,
         AuthorManager authorManager,
-        IClusterClient clusterClient)
+        IClusterClient clusterClient,
+        IInstrumentationProvider instrumentationProvider,
+        ILogger<AuthorAppService> logger)
     {
         _authorRepository = authorRepository;
         _authorManager = authorManager;
         _clusterClient = clusterClient;
+        _activitySource = instrumentationProvider.ActivitySource;
+        _logger = logger;
     }
 
     public async Task<AuthorDto> GetAsync(Guid id)
@@ -32,12 +43,16 @@ public class AuthorAppService : ApplicationService, IAuthorAppService
         return ObjectMapper.Map<Author, AuthorDto>(author);
     }
     
-    public async Task<PagedResultDto<AuthorDto>> GetListAsync(GetAuthorListDto input)
+    public virtual async Task<PagedResultDto<AuthorDto>> GetListAsync(GetAuthorListDto input)
     {
+        using var myActivity = _activitySource.StartActivity($"{nameof(AuthorAppService)}.GetListAsync");
+        
         if (input.Sorting.IsNullOrWhiteSpace())
         {
             input.Sorting = nameof(Author.Name);
         }
+        
+        _logger.LogInformation("GetListAsync called with input: {@Input}", input);
 
         var authors = await _authorRepository.GetListAsync(
             input.SkipCount,
