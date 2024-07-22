@@ -2,6 +2,7 @@ using AElf.OpenTelemetry;
 using MyTemplate.Domain.Grains;
 using Microsoft.Extensions.DependencyInjection;
 using MyTemplate.Application.Grains;
+using Serilog;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
@@ -21,6 +22,8 @@ public class SiloModule : AbpModule, IDomainGrainsModule, IApplicationGrainsModu
         context.Services.AddHostedService<MyTemplateHostedService>();
         var configuration = context.Services.GetConfiguration();
         //add dependencies here
+        context.Services.AddSerilog(loggerConfiguration => {},
+            true, writeToProviders: true);
 
         context.Services.AddHttpClient();
     }
