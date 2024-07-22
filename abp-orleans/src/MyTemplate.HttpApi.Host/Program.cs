@@ -24,6 +24,8 @@ public class Program
                 .ConfigureDefaults(args)
                 .UseAutofac()
                 .UseSerilog();
+            builder.Services.AddSerilog(loggerConfiguration => {},
+                true, writeToProviders: true);
             await builder.AddApplicationAsync<MyTemplateHttpApiHostModule>();
             var app = builder.Build();
             await app.InitializeApplicationAsync();
