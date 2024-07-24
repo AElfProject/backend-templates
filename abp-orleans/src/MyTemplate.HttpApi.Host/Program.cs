@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyTemplate.Extensions;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.OpenTelemetry;
 
 namespace MyTemplate;
 
@@ -24,8 +26,6 @@ public class Program
                 .ConfigureDefaults(args)
                 .UseAutofac()
                 .UseSerilog();
-            builder.Services.AddSerilog(loggerConfiguration => {},
-                true, writeToProviders: true);
             await builder.AddApplicationAsync<MyTemplateHttpApiHostModule>();
             var app = builder.Build();
             await app.InitializeApplicationAsync();
@@ -49,10 +49,17 @@ public class Program
         }
     }
     
-    private static void ConfigureLogger()
+    private static void ConfigureLogger(LoggerConfiguration? loggerConfiguration = null)
     {
-        Log.Logger = new LoggerConfiguration()
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+        Log.Logger = (loggerConfiguration ?? new LoggerConfiguration())
+            .ReadFrom.Configuration(configuration)
 #if DEBUG
+            .WriteTo.OpenTelemetry(
+                endpoint: "http://localhost:4316/v1/logs",
+                protocol: OtlpProtocol.HttpProtobuf)
             .MinimumLevel.Debug()
 #else
             .MinimumLevel.Information()
@@ -60,8 +67,6 @@ public class Program
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
             .Enrich.FromLogContext()
-            .WriteTo.Async(c => c.File("Logs/logs.txt"))
-            .WriteTo.Async(c => c.Console())
             .CreateLogger();
     }
 }
