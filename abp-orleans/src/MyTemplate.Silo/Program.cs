@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using MyTemplate.Silo.Extensions;
 using Serilog;
+using Serilog.Sinks.OpenTelemetry;
 
 namespace MyTemplate.Silo;
 
@@ -16,6 +17,11 @@ public class Program
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .ReadFrom.Configuration(configuration)
+#if DEBUG
+            .WriteTo.OpenTelemetry(
+                endpoint: "http://localhost:4316/v1/logs",
+                protocol: OtlpProtocol.HttpProtobuf)
+#endif
             .CreateLogger();
 
         try
