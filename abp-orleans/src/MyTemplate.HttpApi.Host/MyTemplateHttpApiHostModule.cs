@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AElf.OpenTelemetry;
+using AutoResponseWrapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
@@ -69,7 +70,13 @@ public class MyTemplateHttpApiHostModule : AbpModule, IDomainGrainsModule, IAppl
         ConfigureConventionalControllers();
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
+        ConfigureAutoResponseWrapper(context);
         ConfigureSwaggerServices(context, configuration);
+    }
+    
+    private static void ConfigureAutoResponseWrapper(ServiceConfigurationContext context)
+    {
+        context.Services.AddAutoResponseWrapper();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
