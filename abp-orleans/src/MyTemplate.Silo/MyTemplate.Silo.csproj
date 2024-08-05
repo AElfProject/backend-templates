@@ -16,7 +16,7 @@
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
         <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="8.1.4" />
         <PackageReference Include="Volo.Abp.Autofac" Version="8.1.4" />
-        <PackageReference Include="AElf.OpenTelemetry" Version="1.0.0" />
+        <PackageReference Include="AElf.OpenTelemetry" Version="8.2.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="3.0.0" />
     </ItemGroup>
