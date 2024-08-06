@@ -16,7 +16,7 @@ public class AuthorSummaryWorker : AsyncPeriodicBackgroundWorkerBase
         timer, 
         serviceScopeFactory)
     {
-        Timer.Period = 2000; //10 seconds
+        Timer.Period = 10000; //10 seconds
     }
 
     protected override async Task DoWorkAsync(PeriodicBackgroundWorkerContext workerContext)
