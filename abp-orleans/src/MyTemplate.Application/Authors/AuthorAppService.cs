@@ -106,7 +106,9 @@ public class AuthorAppService : ApplicationService, IAuthorAppService
         
         author.ShortBio = input.ShortBio;
 
-        await _authorRepository.UpdateAsync(author);
+        // immediately save changes to database
+        // reference: https://abp.io/docs/8.2/framework/infrastructure/concurrency-check?_redirected=B8ABF606AA1BDF5C629883DF1061649A
+        await _authorRepository.UpdateAsync(author, autoSave:true);
     }
     
     public async Task DeleteAsync(Guid id)

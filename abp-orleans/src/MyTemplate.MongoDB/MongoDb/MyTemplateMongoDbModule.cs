@@ -35,7 +35,8 @@ public class MyTemplateMongoDbModule : AbpModule
 
         Configure<AbpUnitOfWorkDefaultOptions>(options =>
         {
-            options.TransactionBehavior = UnitOfWorkTransactionBehavior.Disabled;
+            // reference: https://abp.io/docs/latest/framework/architecture/domain-driven-design/unit-of-work?_redirected=B8ABF606AA1BDF5C629883DF1061649A#savechangesasync
+            options.TransactionBehavior = UnitOfWorkTransactionBehavior.Auto;
         });
     }
 }
